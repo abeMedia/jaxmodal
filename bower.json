@@ -1,0 +1,23 @@
+{
+  "name": "jaxmodal",
+  "version": "0.1.1",
+  "main": "dist/jquery.jaxmodal.js",
+  "homepage": "https://github.com/abeMedia/jaxmodal",
+  "license": "GPL-2.0",
+  "keywords": [
+    "jquery",
+    "bootstrap",
+    "modal",
+    "ajax"
+  ],
+  "authors": [
+    "Adam Bouqdib (http://abemedia.co.uk)"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

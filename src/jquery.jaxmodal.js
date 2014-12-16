@@ -18,6 +18,7 @@
     var pluginName = "jaxmodal",
         defaults = {
             id: pluginName,
+            action: "",
             title: "Modal Title",
             size: "md",
             content: "Modal Content",
@@ -27,11 +28,11 @@
                     data: {dismiss: "modal"}
                 },
                 {
-                    title: 'OK',
+                    title: "OK",
                     class: "btn-primary",
                     onclick: function() {
-                        $(this).button('loading');
-                        $('#' + pluginName + ' form').submit();
+                        $(this).button("loading");
+                        $("#" + pluginName + " form").submit();
                     },
                     data: {
                         loadingText: "Loading..."
@@ -41,7 +42,7 @@
             template: 
                 '<div class="<%=this._name%> modal fade" id="<%=id%>" tabindex="-1" role="dialog" aria-labelledby="<%=id%>Label" aria-hidden="true">' + 
                 '  <div class="modal-dialog modal-<%=size%>">' +
-                '    <form class="modal-content" role="form" method="post" enctype="multipart/form-data">' +
+                '    <form action="<%=action%>" class="modal-content" role="form" method="post" enctype="multipart/form-data">' +
                 '      <div class="modal-header">' +
                 '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
                 '        <h4 class="modal-title" id="<%=id%>Label"><%=title%></h4>' +
@@ -63,6 +64,9 @@
     function Plugin ( element, options, callback ) {
             this.element = element;
             this.options = $.extend( {}, defaults, options );
+            if(this.options.action === "") {
+                this.options.action = window.location.href;
+            }
             this._defaults = defaults;
             this._name = pluginName;
             this.callback = callback;
@@ -70,11 +74,12 @@
     }
     $.extend(Plugin.prototype, {
         init: function () {
-            var options = $.extend( {}, this.options, $(this.element).data()),
-                modal = $(this.render(options.template, options));
+            var options = $.extend({}, this.options, $(this.element).data()),
+                modal = $(this.render(options.template, options)),
+                callback = this.callback;
                 
-            modal.find('#' + options.id + 'Actions').children().each(function( i, el ) {
-                $(el).on('click', options.actions[i].onclick);
+            modal.find("#" + options.id + "Actions").children().each(function( i, el ) {
+                $(el).on("click", options.actions[i].onclick);
             });
             
             if ($("#" + options.id).length > 0) {
@@ -83,19 +88,26 @@
                 }
             } 
             else {
-                $('body').append(modal);
+                $("body").append(modal);
             }
             
-            $("#" + options.id).modal('show');
+            $("#" + options.id).modal("show");
             
-            //$("#" + options.id).on('hidden.bs.modal', function () {
-            //    $("#" + options.id).remove();
-            //});
+            $("#" + options.id).on("shown.bs.modal", function () {
+                $("#" + options.id + " :input:enabled:visible:not([readonly],.close):first").focus();
+                if(typeof(callback) === "function") {
+                    callback();
+                }
+            });
+        },
+        destroy: function() {
+            var options = $.extend({}, this.options, $(this.element).data());
             
-            if(typeof(callback) === 'function') {
-                callback();
-            }
-            
+            $("#" + options.id)
+                .modal("hide")
+                .on("hidden.bs.modal", function () {
+                    $("#" + options.id).remove();
+                });
         },
         render: function(str, data){
             var fn = !/\W/.test(str) ?
@@ -127,13 +139,10 @@
     });
     
     $.fn[ pluginName ] = function ( options, callback ) {
-            this.each(function() {
-                //if ( !$.data( this, "plugin_" + pluginName ) ) {
-                    $.data( this, "plugin_" + pluginName, new Plugin( this, options, callback ) );
-                //}
-            });
-            
-            return this;
+        return this.each(function() {
+            //if ( !$.data( this, "plugin_" + pluginName ) ) {
+                $.data( this, "plugin_" + pluginName, new Plugin( this, options, callback ) );
+            //}
+        });
     };
-        
 }));
