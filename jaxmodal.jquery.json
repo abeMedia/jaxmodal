@@ -1,0 +1,27 @@
+{
+  "name": "jaxmodal",
+  "title": "jaxModal",
+  "description": "The best jQuery plugin ever.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/abemedia/jaxmodal",
+  "author": {
+    "name": "Adam Bouqdib",
+    "email": "adam@abemedia.co.uk",
+    "url": "http://abemedia.co.uk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/abemedia/jaxmodal.git"
+  },
+  "bugs": "https://github.com/abemedia/jaxmodal/issues",
+  "licenses": [
+    {
+      "type": "GPL-2.0",
+      "url": "https://github.com/abemedia/jaxmodal/blob/master/LICENSE-GPL-2.0"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "keywords": []
+}
